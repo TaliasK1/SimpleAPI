@@ -1,8 +1,8 @@
 pipeline {
   agent any
   environment {
-    DOCKER_REGISTRY = 'harbor.local'
-    DOCKER_CREDENTIALS = credentials('harbor-credentials')
+    //DOCKER_REGISTRY = 'harbor.local'
+    //DOCKER_CREDENTIALS = credentials('harbor-credentials')
     IMAGE = "harbor.local/library/python-api:${BUILD_NUMBER}"
   }
   stages {
