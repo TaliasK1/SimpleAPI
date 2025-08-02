@@ -28,14 +28,11 @@ pipeline {
         echo "TODO: Push to Harbor"
       }
     }
-<<<<<<< HEAD
     stage('Deploy') {
       steps {
         // TODO: Add deployment logic
         echo "TODO: Deploy"
       }
     }
-=======
->>>>>>> 28bd69342336bea8d8e6583286b969a55c6dd3ac
   }
 }
