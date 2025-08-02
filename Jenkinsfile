@@ -1,37 +1,41 @@
-@Library('shared-lib') _
-
-def imageName = "harbor.local/library/python-api:${env.BUILD_NUMBER}"
-
 pipeline {
   agent any
   environment {
-    IMAGE = imageName
+    DOCKER_REGISTRY = 'harbor.local'
+    DOCKER_CREDENTIALS = credentials('harbor-credentials')
+    IMAGE = "harbor.local/library/python-api:${BUILD_NUMBER}"
   }
   stages {
     stage('Checkout') {
-      steps {
-        checkout scm
-      }
+      steps { checkout scm }
+    }
+    stage('Test') {
+      steps { sh 'pytest tests' }
     }
     stage('Build with Kaniko') {
       steps {
-        buildDocker(IMAGE)
-      }
-    }
-    stage('Install Dependencies') {
-      steps {
-        sh 'pip install -r requirements.txt'
-      }
-    }
-    stage('Test') {
-      steps {
-        sh 'pytest tests'
+        script {
+          // Build Docker image using kaniko (local build only)
+          sh '''
+            /kaniko/executor --dockerfile Dockerfile --context . --destination ${IMAGE} --no-push
+          '''
+        }
       }
     }
     stage('Push to Harbor') {
       steps {
-        echo "Pushed image: ${IMAGE}"
+        // TODO: Push image if not already pushed by Kaniko
+        echo "TODO: Push to Harbor"
       }
     }
+<<<<<<< HEAD
+    stage('Deploy') {
+      steps {
+        // TODO: Add deployment logic
+        echo "TODO: Deploy"
+      }
+    }
+=======
+>>>>>>> 28bd69342336bea8d8e6583286b969a55c6dd3ac
   }
 }
